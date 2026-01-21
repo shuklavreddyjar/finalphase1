@@ -39,13 +39,13 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
 
-                // 🔥 JWT FIRST (anchor to known filter)
+                // JWT FIRST (anchor to known filter)
                 .addFilterBefore(
                         jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class
                 )
 
-                // 🔥 RATE LIMIT AFTER JWT (still anchored to known filter)
+                // RATE LIMIT AFTER JWT (still anchored to known filter)
                 .addFilterAfter(
                         rateLimitingFilter,
                         UsernamePasswordAuthenticationFilter.class

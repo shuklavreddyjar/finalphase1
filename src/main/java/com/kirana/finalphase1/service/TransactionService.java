@@ -47,7 +47,7 @@ public class TransactionService {
 
     @Transactional
     public TransactionResponseDTO createTransaction(
-            String userId,                     // 🔥 Mongo ObjectId (hex string)
+            String userId,                     //  Mongo ObjectId (hex string)
             TransactionRequestDTO request) {
 
         // Validate transaction amount
