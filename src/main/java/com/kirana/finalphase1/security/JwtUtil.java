@@ -34,7 +34,7 @@ public class JwtUtil {
     public String generateToken(String userId, String role) {
 
         return Jwts.builder()
-                .setSubject(userId)           // 🔥 userId, NOT email
+                .setSubject(userId)
                 .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(

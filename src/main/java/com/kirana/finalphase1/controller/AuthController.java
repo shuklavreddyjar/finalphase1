@@ -68,7 +68,7 @@ public class AuthController {
             throw new InvalidCredentialsException("Invalid username or password");
         }
 
-        // 🔥 JWT now carries userId (Mongo ObjectId), NOT email
+        //  JWT now carries userId (Mongo ObjectId), NOT email
         String token = jwtUtil.generateToken(
                 user.getId().toHexString(),
                 user.getRole()

@@ -38,7 +38,7 @@ public class ReportConsumerService {
         // Create report (timestamps handled automatically)
         ReportDocument report = new ReportDocument();
         report.setRequestId(message.getRequestId());
-        report.setUserId(message.getUserId());   // 🔥 Mongo ObjectId (hex string)
+        report.setUserId(message.getUserId());
         report.setFromTime(message.getFromTime());
         report.setToTime(message.getToTime());
         report.setStatus(ReportStatus.IN_PROGRESS);

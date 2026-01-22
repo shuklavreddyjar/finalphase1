@@ -38,7 +38,7 @@ public class ReportsController {
 
         String requestId = UUID.randomUUID().toString();
 
-        // 🔥 MongoDB userId (ObjectId hex string) from JWT
+        // MongoDB userId (ObjectId hex string) from JWT
         String userId = SecurityUtils.getCurrentUserId();
 
         ReportRequestMessage message = new ReportRequestMessage();

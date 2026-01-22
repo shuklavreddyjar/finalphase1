@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @Configuration
 public class RedisConfig {
 
-    // ================= FX RATE CACHE =================
+    // FX RATE CACHE
     @Bean
     public RedisTemplate<String, BigDecimal> fxRateRedisTemplate(
             RedisConnectionFactory connectionFactory) {
@@ -30,7 +30,7 @@ public class RedisConfig {
         return template;
     }
 
-    // ================= RATE LIMITING =================
+    //  RATE LIMITING
     @Bean
     public RedisTemplate<String, Object> rateLimitRedisTemplate(
             RedisConnectionFactory connectionFactory) {

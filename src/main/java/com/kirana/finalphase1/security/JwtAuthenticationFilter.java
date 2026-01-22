@@ -53,7 +53,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             try {
                 Claims claims = jwtUtil.validateToken(token);
 
-                // 🔥 userId (Mongo ObjectId as hex string)
+                // userId (Mongo ObjectId as hex string)
                 String userId = claims.getSubject();
                 String role = claims.get("role", String.class);
 

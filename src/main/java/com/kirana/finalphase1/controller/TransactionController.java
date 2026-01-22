@@ -20,7 +20,7 @@ public class TransactionController {
     public TransactionResponseDTO createTransaction(
             @RequestBody TransactionRequestDTO request) {
 
-        // 🔥 userId = MongoDB ObjectId (hex string) from JWT
+        // userId = MongoDB ObjectId (hex string) from JWT
         String userId = SecurityUtils.getCurrentUserId();
 
         return transactionService.createTransaction(userId, request);
