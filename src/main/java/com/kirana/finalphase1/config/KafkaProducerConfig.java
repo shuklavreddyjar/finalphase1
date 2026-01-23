@@ -13,9 +13,17 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The type Kafka producer config.
+ */
 @Configuration
 public class KafkaProducerConfig {
 
+    /**
+     * Producer factory producer factory.
+     *
+     * @return the producer factory
+     */
     @Bean
     public ProducerFactory<String, ReportRequestMessage> producerFactory() {
 
@@ -39,6 +47,11 @@ public class KafkaProducerConfig {
         return new DefaultKafkaProducerFactory<>(configProps);
     }
 
+    /**
+     * Kafka template kafka template.
+     *
+     * @return the kafka template
+     */
     @Bean
     public KafkaTemplate<String, ReportRequestMessage> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());

@@ -8,6 +8,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.math.BigDecimal;
 import java.util.Date;
 
+/**
+ * The type Account entity.
+ */
 @Entity
 @Table(name = "accounts")
 @Data

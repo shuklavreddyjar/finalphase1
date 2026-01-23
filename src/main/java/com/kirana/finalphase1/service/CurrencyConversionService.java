@@ -11,6 +11,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+/**
+ * The type Currency conversion service.
+ */
 @Slf4j
 @Service
 public class CurrencyConversionService {
@@ -21,6 +24,12 @@ public class CurrencyConversionService {
     @Value("${fx.rate.cache.ttl.seconds}")
     private long ttlSeconds;
 
+    /**
+     * Instantiates a new Currency conversion service.
+     *
+     * @param fxRateCacheService the fx rate cache service
+     * @param webClientBuilder   the web client builder
+     */
     public CurrencyConversionService(
             FxRateCacheService fxRateCacheService,
             WebClient.Builder webClientBuilder) {
@@ -33,6 +42,10 @@ public class CurrencyConversionService {
 
     /**
      * UNIVERSAL conversion method
+     *
+     * @param amount       the amount
+     * @param fromCurrency the from currency
+     * @return the big decimal
      */
     public BigDecimal convertToINR(BigDecimal amount, CurrencyType fromCurrency) {
 

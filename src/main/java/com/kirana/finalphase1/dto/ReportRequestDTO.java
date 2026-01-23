@@ -5,6 +5,9 @@ import lombok.Data;
 
 import java.util.Date;
 
+/**
+ * The type Report request dto.
+ */
 @Data
 public class ReportRequestDTO {
 

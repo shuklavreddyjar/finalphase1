@@ -10,6 +10,9 @@ import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
+/**
+ * The type Jwt util.
+ */
 @Component
 public class JwtUtil {
 
@@ -30,6 +33,7 @@ public class JwtUtil {
      *
      * @param userId MongoDB ObjectId (hex string)
      * @param role   USER / ADMIN
+     * @return the string
      */
     public String generateToken(String userId, String role) {
 
@@ -46,6 +50,9 @@ public class JwtUtil {
 
     /**
      * Validates JWT and returns claims.
+     *
+     * @param token the token
+     * @return the claims
      */
     public Claims validateToken(String token) {
 

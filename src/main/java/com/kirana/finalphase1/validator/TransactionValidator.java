@@ -8,9 +8,18 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
+/**
+ * The type Transaction validator.
+ */
 @Service
 public class TransactionValidator {
 
+    /**
+     * Validate type transaction type.
+     *
+     * @param type the type
+     * @return the transaction type
+     */
     public TransactionType validateType(String type) {
         try {
             return TransactionType.valueOf(type.toUpperCase());
@@ -19,6 +28,13 @@ public class TransactionValidator {
         }
     }
 
+    /**
+     * Validate balance.
+     *
+     * @param account the account
+     * @param type    the type
+     * @param amount  the amount
+     */
     public void validateBalance(AccountEntity account,
                                 TransactionType type,
                                 BigDecimal amount) {
@@ -30,6 +46,11 @@ public class TransactionValidator {
         }
     }
 
+    /**
+     * Validate amount.
+     *
+     * @param amount the amount
+     */
     public void validateAmount(BigDecimal amount) {
 
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {

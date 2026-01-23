@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+/**
+ * The type Auth controller.
+ */
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -24,6 +27,14 @@ public class AuthController {
     private final JwtUtil jwtUtil;
     private final UserService userService;
 
+    /**
+     * Instantiates a new Auth controller.
+     *
+     * @param userRepository  the user repository
+     * @param passwordEncoder the password encoder
+     * @param jwtUtil         the jwt util
+     * @param userService     the user service
+     */
     public AuthController(UserRepository userRepository,
                           BCryptPasswordEncoder passwordEncoder,
                           JwtUtil jwtUtil,
@@ -36,6 +47,9 @@ public class AuthController {
 
     /**
      * PUBLIC USER SIGNUP
+     *
+     * @param request the request
+     * @return the response entity
      */
     @PostMapping("/signup")
     public ResponseEntity<Map<String, String>> signup(
@@ -53,6 +67,9 @@ public class AuthController {
 
     /**
      * LOGIN (USER / ADMIN)
+     *
+     * @param request the request
+     * @return the map
      */
     @PostMapping("/login")
     public Map<String, String> login(

@@ -3,6 +3,9 @@ package com.kirana.finalphase1.security;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+/**
+ * The type Security utils.
+ */
 public final class SecurityUtils {
 
     private SecurityUtils() {}
@@ -10,6 +13,8 @@ public final class SecurityUtils {
     /**
      * Returns the authenticated user's ID.
      * This is the MongoDB ObjectId (hex string) stored in JWT subject.
+     *
+     * @return the current user id
      */
     public static String getCurrentUserId() {
 

@@ -5,6 +5,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
+/**
+ * The type Login request dto.
+ */
 @Data
 public class LoginRequestDTO {
 

@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * The type Reports controller.
+ */
 @RestController
 @RequestMapping("/reports")
 public class ReportsController {
@@ -19,6 +22,12 @@ public class ReportsController {
     private final ReportProducerService reportProducerService;
     private final ReportQueryService reportQueryService;
 
+    /**
+     * Instantiates a new Reports controller.
+     *
+     * @param reportProducerService the report producer service
+     * @param reportQueryService    the report query service
+     */
     public ReportsController(
             ReportProducerService reportProducerService,
             ReportQueryService reportQueryService
@@ -29,6 +38,9 @@ public class ReportsController {
 
     /**
      * ASYNC REPORT REQUEST
+     *
+     * @param request the request
+     * @return the map
      */
     @PostMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
@@ -57,6 +69,9 @@ public class ReportsController {
 
     /**
      * FETCH REPORT BY REQUEST ID
+     *
+     * @param requestId the request id
+     * @return the report
      */
     @GetMapping("/{requestId}")
     public ReportDocument getReport(@PathVariable String requestId) {

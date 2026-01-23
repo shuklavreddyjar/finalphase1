@@ -12,6 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
+/**
+ * The type User service.
+ */
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -22,6 +25,9 @@ public class UserService {
 
     /**
      * PUBLIC USER SIGNUP
+     *
+     * @param email    the email
+     * @param password the password
      */
     @Transactional
     public void signupUser(String email, String password) {
@@ -48,6 +54,9 @@ public class UserService {
 
     /**
      * ADMIN CREATION (ADMIN ONLY)
+     *
+     * @param email    the email
+     * @param password the password
      */
     @Transactional
     public void createAdmin(String email, String password) {
@@ -74,6 +83,8 @@ public class UserService {
 
     /**
      * PROMOTE EXISTING USER → ADMIN
+     *
+     * @param email the email
      */
     @Transactional
     public void promoteToAdmin(String email) {

@@ -9,10 +9,19 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.math.BigDecimal;
 
+/**
+ * The type Redis config.
+ */
 @Configuration
 public class RedisConfig {
 
-    // FX RATE CACHE
+    /**
+     * Fx rate redis template redis template.
+     *
+     * @param connectionFactory the connection factory
+     * @return the redis template
+     */
+// FX RATE CACHE
     @Bean
     public RedisTemplate<String, BigDecimal> fxRateRedisTemplate(
             RedisConnectionFactory connectionFactory) {
@@ -30,7 +39,13 @@ public class RedisConfig {
         return template;
     }
 
-    //  RATE LIMITING
+    /**
+     * Rate limit redis template redis template.
+     *
+     * @param connectionFactory the connection factory
+     * @return the redis template
+     */
+//  RATE LIMITING
     @Bean
     public RedisTemplate<String, Object> rateLimitRedisTemplate(
             RedisConnectionFactory connectionFactory) {

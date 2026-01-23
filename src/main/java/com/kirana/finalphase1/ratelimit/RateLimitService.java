@@ -7,12 +7,20 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 
+/**
+ * The type Rate limit service.
+ */
 @Slf4j
 @Service
 public class RateLimitService {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
+    /**
+     * Instantiates a new Rate limit service.
+     *
+     * @param redisTemplate the redis template
+     */
     public RateLimitService(
             @Qualifier("rateLimitRedisTemplate")
             RedisTemplate<String, Object> redisTemplate) {
@@ -20,6 +28,13 @@ public class RateLimitService {
         this.redisTemplate = redisTemplate;
     }
 
+    /**
+     * Is allowed boolean.
+     *
+     * @param key   the key
+     * @param limit the limit
+     * @return the boolean
+     */
     public boolean isAllowed(String key, int limit) {
 
         Long count = redisTemplate.opsForValue().increment(key);

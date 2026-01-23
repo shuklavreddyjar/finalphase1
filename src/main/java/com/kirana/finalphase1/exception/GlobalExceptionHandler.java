@@ -8,10 +8,19 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Map;
 
+/**
+ * The type Global exception handler.
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // DUPLICATE USER (SIGNUP)
+    /**
+     * Handle duplicate user response entity.
+     *
+     * @param ex the ex
+     * @return the response entity
+     */
+// DUPLICATE USER (SIGNUP)
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<Map<String, Object>> handleDuplicateUser(
             UserAlreadyExistsException ex) {
@@ -24,7 +33,13 @@ public class GlobalExceptionHandler {
                 ));
     }
 
-    // INVALID LOGIN (EMAIL / PASSWORD)
+    /**
+     * Handle invalid credentials response entity.
+     *
+     * @param ex the ex
+     * @return the response entity
+     */
+// INVALID LOGIN (EMAIL / PASSWORD)
     @ExceptionHandler(InvalidCredentialsException.class)
     public ResponseEntity<Map<String, Object>> handleInvalidCredentials(
             InvalidCredentialsException ex) {
@@ -37,7 +52,13 @@ public class GlobalExceptionHandler {
                 ));
     }
 
-    // INSUFFICIENT BALANCE
+    /**
+     * Handle insufficient balance response entity.
+     *
+     * @param ex the ex
+     * @return the response entity
+     */
+// INSUFFICIENT BALANCE
     @ExceptionHandler(InsufficientBalanceException.class)
     public ResponseEntity<Map<String, Object>> handleInsufficientBalance(
             InsufficientBalanceException ex) {
@@ -50,7 +71,13 @@ public class GlobalExceptionHandler {
                 ));
     }
 
-    // INVALID TRANSACTION AMOUNT
+    /**
+     * Handle invalid amount response entity.
+     *
+     * @param ex the ex
+     * @return the response entity
+     */
+// INVALID TRANSACTION AMOUNT
     @ExceptionHandler(InvalidTransactionAmountException.class)
     public ResponseEntity<Map<String, Object>> handleInvalidAmount(
             InvalidTransactionAmountException ex) {
@@ -63,7 +90,13 @@ public class GlobalExceptionHandler {
                 ));
     }
 
-    //  VALIDATION ERRORS (EMPTY EMAIL / PASSWORD)
+    /**
+     * Handle validation errors response entity.
+     *
+     * @param ex the ex
+     * @return the response entity
+     */
+//  VALIDATION ERRORS (EMPTY EMAIL / PASSWORD)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationErrors(
             MethodArgumentNotValidException ex) {
@@ -76,7 +109,13 @@ public class GlobalExceptionHandler {
                 ));
     }
 
-    // ILLEGAL ARGUMENTS
+    /**
+     * Handle illegal argument response entity.
+     *
+     * @param ex the ex
+     * @return the response entity
+     */
+// ILLEGAL ARGUMENTS
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, Object>> handleIllegalArgument(
             IllegalArgumentException ex) {
@@ -89,6 +128,12 @@ public class GlobalExceptionHandler {
                 ));
     }
 
+    /**
+     * Handle account not found response entity.
+     *
+     * @param ex the ex
+     * @return the response entity
+     */
     @ExceptionHandler(AccountNotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleAccountNotFound(
             AccountNotFoundException ex) {
@@ -101,6 +146,12 @@ public class GlobalExceptionHandler {
                 ));
     }
 
+    /**
+     * Handle illegal state response entity.
+     *
+     * @param ex the ex
+     * @return the response entity
+     */
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<Map<String, Object>> handleIllegalState(
             IllegalStateException ex) {

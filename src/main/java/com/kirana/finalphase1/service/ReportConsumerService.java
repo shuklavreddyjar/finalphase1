@@ -23,12 +23,23 @@ public class ReportConsumerService {
     private final TransactionRepository transactionRepository;
     private final ReportMongoRepository reportMongoRepository;
 
+    /**
+     * Instantiates a new Report consumer service.
+     *
+     * @param transactionRepository the transaction repository
+     * @param reportMongoRepository the report mongo repository
+     */
     public ReportConsumerService(TransactionRepository transactionRepository,
                                  ReportMongoRepository reportMongoRepository) {
         this.transactionRepository = transactionRepository;
         this.reportMongoRepository = reportMongoRepository;
     }
 
+    /**
+     * Consume report request.
+     *
+     * @param message the message
+     */
     @KafkaListener(
             topics = "report_requests",
             groupId = "report-consumer-group"

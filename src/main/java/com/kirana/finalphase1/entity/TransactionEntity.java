@@ -12,6 +12,9 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.UUID;
 
+/**
+ * The type Transaction entity.
+ */
 @Entity
 @Table(name = "transactions")
 @Data
