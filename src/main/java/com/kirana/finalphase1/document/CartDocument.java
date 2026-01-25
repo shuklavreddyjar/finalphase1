@@ -1,5 +1,7 @@
 package com.kirana.finalphase1.document;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -9,46 +11,40 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * The type Cart document.
- */
-@Data
 @Document(collection = "carts")
+@Data
 public class CartDocument {
 
     @Id
-    private ObjectId cartId;
+    @JsonIgnore
+    private ObjectId id;
 
-    /**
-     * MongoDB User _id (hex string)
-     */
     private String userId;
 
     private CartStatus status = CartStatus.ACTIVE;
 
     private List<CartItem> items = new ArrayList<>();
 
-    /**
-     * The type Cart item.
-     */
-    @Data
-    public static class CartItem {
-        private String productId;
-        private Integer quantity;
-        private BigDecimal priceSnapshot;
+
+    @JsonProperty("cartId")
+    public String getCartId() {
+        return id != null ? id.toHexString() : null;
     }
 
-    /**
-     * The enum Cart status.
-     */
+
+
     public enum CartStatus {
-        /**
-         * Active cart status.
-         */
         ACTIVE,
-        /**
-         * Checked out cart status.
-         */
         CHECKED_OUT
+    }
+
+
+
+    @Data
+    public static class CartItem {
+
+        private String productId;        // Mongo productId as hex string
+        private Integer quantity;
+        private BigDecimal priceSnapshot;
     }
 }

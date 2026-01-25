@@ -1,11 +1,10 @@
 package com.kirana.finalphase1.controller;
 
-import com.kirana.finalphase1.entity.ProductEntity;
+import com.kirana.finalphase1.document.ProductDocument;
 import com.kirana.finalphase1.service.ProductQueryService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * The type Product controller.
@@ -31,19 +30,19 @@ public class ProductController {
      * @return the all products
      */
     @GetMapping
-    public List<ProductEntity> getAllProducts() {
+    public List<ProductDocument> getAllProducts() {
         return productQueryService.getAllProducts();
     }
 
     /**
      * GET product by ID (public)
      *
-     * @param productId the product id
-     * @return the product by id
+     * @param productId the product id (Mongo ObjectId hex string)
+     * @return the product
      */
     @GetMapping("/{productId}")
-    public ProductEntity getProductById(
-            @PathVariable UUID productId) {
+    public ProductDocument getProductById(
+            @PathVariable String productId) {
 
         return productQueryService.getProductById(productId);
     }

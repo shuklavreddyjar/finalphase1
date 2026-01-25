@@ -4,8 +4,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
 
-import java.util.UUID;
-
 /**
  * The type Add to cart request dto.
  */
@@ -13,7 +11,7 @@ import java.util.UUID;
 public class AddToCartRequestDTO {
 
     @NotNull
-    private UUID productId;
+    private String productId;   // Mongo ObjectId as String
 
     @NotNull
     @Positive

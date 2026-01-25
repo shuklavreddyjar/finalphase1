@@ -1,45 +1,36 @@
 package com.kirana.finalphase1.service;
 
+import com.kirana.finalphase1.document.InventoryDocument;
+import com.kirana.finalphase1.document.ProductDocument;
 import com.kirana.finalphase1.dto.CreateProductRequestDTO;
-import com.kirana.finalphase1.entity.InventoryEntity;
-import com.kirana.finalphase1.entity.ProductEntity;
-import com.kirana.finalphase1.repository.InventoryRepository;
-import com.kirana.finalphase1.repository.ProductRepository;
+import com.kirana.finalphase1.repository.mongo.InventoryMongoRepository;
+import com.kirana.finalphase1.repository.mongo.ProductMongoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * The type Product admin service.
- */
 @Service
 @RequiredArgsConstructor
 public class ProductAdminService {
 
-    private final ProductRepository productRepository;
-    private final InventoryRepository inventoryRepository;
+    private final ProductMongoRepository productRepository;
+    private final InventoryMongoRepository inventoryRepository;
 
-    /**
-     * Create product product entity.
-     *
-     * @param request the request
-     * @return the product entity
-     */
     @Transactional
-    public ProductEntity createProduct(CreateProductRequestDTO request) {
+    public ProductDocument createProduct(CreateProductRequestDTO request) {
 
-        // Create product
-        ProductEntity product = new ProductEntity();
+        // 1. Create product (Mongo)
+        ProductDocument product = new ProductDocument();
         product.setName(request.getName());
         product.setPrice(request.getPrice());
         product.setCurrency(request.getCurrency());
         product.setActive(true);
 
-        ProductEntity savedProduct = productRepository.save(product);
+        ProductDocument savedProduct = productRepository.save(product);
 
-        // Create inventory
-        InventoryEntity inventory = new InventoryEntity();
-        inventory.setProductId(savedProduct.getProductId());
+        // 2. Create inventory (Mongo)
+        InventoryDocument inventory = new InventoryDocument();
+        inventory.setProductId(savedProduct.getId().toHexString());
         inventory.setQuantityAvailable(request.getInitialQuantity());
 
         inventoryRepository.save(inventory);
