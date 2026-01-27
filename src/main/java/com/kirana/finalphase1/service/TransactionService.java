@@ -23,41 +23,34 @@ public class TransactionService {
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
     private final TransactionValidator transactionValidator;
+    private final CurrencyConversionService currencyConversionService;
 
-    /**
-     * Instantiates a new Transaction service.
-     *
-     * @param accountRepository     the account repository
-     * @param transactionRepository the transaction repository
-     * @param transactionValidator  the transaction validator
-     */
     public TransactionService(
             AccountRepository accountRepository,
             TransactionRepository transactionRepository,
-            TransactionValidator transactionValidator
+            TransactionValidator transactionValidator,
+            CurrencyConversionService currencyConversionService
     ) {
         this.accountRepository = accountRepository;
         this.transactionRepository = transactionRepository;
         this.transactionValidator = transactionValidator;
+        this.currencyConversionService = currencyConversionService;
     }
 
     /**
-     * Wallet top-up & debit API
-     *
-     * @param request the request
-     * @return the transaction entity
+     * Wallet top-up / debit
      */
     @Transactional
     public TransactionEntity createTransaction(TransactionRequestDTO request) {
 
-        // Validate amount
+
         transactionValidator.validateAmount(request.getAmount());
 
-        // Resolve transaction type
+
         TransactionType type =
                 transactionValidator.validateType(request.getType());
 
-        // Load user account
+
         String userId = SecurityUtils.getCurrentUserId();
 
         AccountEntity account = accountRepository
@@ -65,26 +58,34 @@ public class TransactionService {
                 .orElseThrow(() ->
                         new IllegalStateException("Account not found"));
 
-        // Validate balance for DEBIT
+
+        BigDecimal amountInInr =
+                currencyConversionService.convertToINR(
+                        request.getAmount(),
+                        request.getOriginalCurrency()
+                );
+
+
         transactionValidator.validateBalance(
-                account, type, request.getAmount()
+                account, type, amountInInr
         );
 
-        // Update wallet balance
+
         BigDecimal newBalance =
                 type == TransactionType.CREDIT
-                        ? account.getBalance().add(request.getAmount())
-                        : account.getBalance().subtract(request.getAmount());
+                        ? account.getBalance().add(amountInInr)
+                        : account.getBalance().subtract(amountInInr);
 
         account.setBalance(newBalance);
         accountRepository.save(account);
 
-        // Create transaction (FIXED CALL)
+
         TransactionEntity transaction =
                 TransactionFactory.create(
                         account,
                         type,
-                        request.getAmount()
+                        amountInInr,
+                        request.getOriginalCurrency()
                 );
 
         transactionRepository.save(transaction);

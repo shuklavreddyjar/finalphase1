@@ -16,21 +16,24 @@ public class TransactionFactory {
     /**
      * Create transaction entity.
      *
-     * @param account the account
-     * @param type    the type
-     * @param amount  the amount
-     * @return the transaction entity
+     * @param account          the account
+     * @param type             CREDIT / DEBIT
+     * @param amountInInr      amount always stored in INR
+     * @param originalCurrency original currency sent by user
+     * @return transaction entity
      */
     public static TransactionEntity create(
             AccountEntity account,
             TransactionType type,
-            BigDecimal amount) {
+            BigDecimal amountInInr,
+            CurrencyType originalCurrency
+    ) {
 
         TransactionEntity tx = new TransactionEntity();
 
         tx.setUserId(account.getUserId());
-        tx.setAmount(amount);
-        tx.setOriginalCurrency(CurrencyType.INR);
+        tx.setAmount(amountInInr);
+        tx.setOriginalCurrency(originalCurrency);
         tx.setType(type);
         tx.setStatus(TransactionStatus.SUCCESS);
 

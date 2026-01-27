@@ -1,16 +1,17 @@
 package com.kirana.finalphase1.service;
 
 import com.kirana.finalphase1.document.CartDocument;
-import com.kirana.finalphase1.document.InventoryDocument;
 import com.kirana.finalphase1.document.OrderDocument;
 import com.kirana.finalphase1.entity.AccountEntity;
+import com.kirana.finalphase1.entity.InventoryEntity;
 import com.kirana.finalphase1.entity.TransactionEntity;
+import com.kirana.finalphase1.enums.CurrencyType;
 import com.kirana.finalphase1.enums.TransactionType;
 import com.kirana.finalphase1.factory.TransactionFactory;
 import com.kirana.finalphase1.repository.AccountRepository;
+import com.kirana.finalphase1.repository.InventoryRepository;
 import com.kirana.finalphase1.repository.TransactionRepository;
 import com.kirana.finalphase1.repository.mongo.CartMongoRepository;
-import com.kirana.finalphase1.repository.mongo.InventoryMongoRepository;
 import com.kirana.finalphase1.repository.mongo.OrderMongoRepository;
 import com.kirana.finalphase1.security.SecurityUtils;
 import org.springframework.stereotype.Service;
@@ -20,18 +21,21 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Checkout service.
+ */
 @Service
 public class CheckoutService {
 
     private final CartMongoRepository cartRepository;
-    private final InventoryMongoRepository inventoryRepository;
+    private final InventoryRepository inventoryRepository;
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
     private final OrderMongoRepository orderRepository;
 
     public CheckoutService(
             CartMongoRepository cartRepository,
-            InventoryMongoRepository inventoryRepository,
+            InventoryRepository inventoryRepository,
             AccountRepository accountRepository,
             TransactionRepository transactionRepository,
             OrderMongoRepository orderRepository
@@ -44,14 +48,14 @@ public class CheckoutService {
     }
 
     /**
-     * ATOMIC CHECKOUT FLOW
+     * Atomic checkout
      */
     @Transactional
     public TransactionEntity checkout() {
 
         String userId = SecurityUtils.getCurrentUserId();
 
-        // 1. Fetch ACTIVE cart
+
         CartDocument cart = cartRepository
                 .findByUserIdAndStatus(userId, CartDocument.CartStatus.ACTIVE)
                 .orElseThrow(() ->
@@ -61,13 +65,13 @@ public class CheckoutService {
             throw new IllegalStateException("Cart is empty");
         }
 
-        // 2. Validate inventory (Mongo) + calculate total
         BigDecimal totalAmount = BigDecimal.ZERO;
+
 
         for (CartDocument.CartItem item : cart.getItems()) {
 
-            InventoryDocument inventory = inventoryRepository
-                    .findByProductId(item.getProductId())
+            InventoryEntity inventory = inventoryRepository
+                    .findById(item.getProductId())
                     .orElseThrow(() ->
                             new IllegalStateException("Inventory not found"));
 
@@ -75,10 +79,10 @@ public class CheckoutService {
                 throw new IllegalStateException("Insufficient inventory");
             }
 
-            // Deduct inventory
             inventory.setQuantityAvailable(
                     inventory.getQuantityAvailable() - item.getQuantity()
             );
+
             inventoryRepository.save(inventory);
 
             totalAmount = totalAmount.add(
@@ -87,16 +91,39 @@ public class CheckoutService {
             );
         }
 
-        // 3. CREATE ORDER (Mongo) → PLACED
+
+        AccountEntity account = accountRepository
+                .findByUserId(userId)
+                .orElseThrow(() ->
+                        new IllegalStateException("Account not found"));
+
+        if (account.getBalance().compareTo(totalAmount) < 0) {
+            throw new IllegalStateException("Insufficient balance");
+        }
+
+        account.setBalance(account.getBalance().subtract(totalAmount));
+        accountRepository.save(account);
+
+
+        TransactionEntity tx =
+                TransactionFactory.create(
+                        account,
+                        TransactionType.DEBIT,
+                        totalAmount,
+                        CurrencyType.INR
+                );
+
+        transactionRepository.save(tx);
+
+
         OrderDocument order = new OrderDocument();
         order.setUserId(userId);
-        order.setStatus(OrderDocument.OrderStatus.PLACED);
+        order.setStatus(OrderDocument.OrderStatus.PAID);
         order.setTotalAmount(totalAmount);
 
         List<OrderDocument.OrderItem> orderItems = new ArrayList<>();
 
         for (CartDocument.CartItem item : cart.getItems()) {
-
             OrderDocument.OrderItem oi = new OrderDocument.OrderItem();
             oi.setProductId(item.getProductId());
             oi.setQuantity(item.getQuantity());
@@ -105,44 +132,16 @@ public class CheckoutService {
                     item.getPriceSnapshot()
                             .multiply(BigDecimal.valueOf(item.getQuantity()))
             );
-
             orderItems.add(oi);
         }
 
         order.setItems(orderItems);
-        order = orderRepository.save(order);
-
-        // 4. Wallet debit (Postgres)
-        AccountEntity account = accountRepository
-                .findByUserId(userId)
-                .orElseThrow(() ->
-                        new IllegalStateException("Account not found"));
-
-        if (account.getBalance().compareTo(totalAmount) < 0) {
-            throw new IllegalStateException("Insufficient wallet balance");
-        }
-
-        account.setBalance(account.getBalance().subtract(totalAmount));
-        accountRepository.save(account);
-
-        // 5. Transaction (Postgres)
-        TransactionEntity transaction =
-                TransactionFactory.create(
-                        account,
-                        TransactionType.DEBIT,
-                        totalAmount
-                );
-
-        transactionRepository.saveAndFlush(transaction);
-
-        // 6. Update order → PAID
-        order.setStatus(OrderDocument.OrderStatus.PAID);
         orderRepository.save(order);
 
-        // 7. Close cart
+
         cart.setStatus(CartDocument.CartStatus.CHECKED_OUT);
         cartRepository.save(cart);
 
-        return transaction;
+        return tx;
     }
 }
