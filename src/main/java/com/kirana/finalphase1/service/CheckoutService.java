@@ -71,9 +71,10 @@ public class CheckoutService {
         for (CartDocument.CartItem item : cart.getItems()) {
 
             InventoryEntity inventory = inventoryRepository
-                    .findById(item.getProductId())
+                    .findByProductId(item.getProductId())
                     .orElseThrow(() ->
                             new IllegalStateException("Inventory not found"));
+
 
             if (inventory.getQuantityAvailable() < item.getQuantity()) {
                 throw new IllegalStateException("Insufficient inventory");

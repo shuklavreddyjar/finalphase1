@@ -38,7 +38,7 @@ public class CartService {
                         new IllegalArgumentException("Product not found"));
 
         InventoryEntity inventory = inventoryRepository
-                .findById(product.getId().toHexString())
+                .findByProductId(product.getId().toHexString())
                 .orElseThrow(() ->
                         new IllegalStateException("Inventory not found"));
 
